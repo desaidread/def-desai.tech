@@ -1,0 +1,38 @@
+package templates
+
+templ AdminLoginForm(wrongKey bool) {
+	<div class="admin-login-wrap">
+		<div class="admin-login-box">
+			<div class="admin-eyebrow">ACCESS CONTROL</div>
+			<h1 class="admin-title">ADMIN<span>{ "//" }</span>LOGIN</h1>
+			<p class="admin-login-hint">Введи ключ доступа (env: ADMIN_KEY)</p>
+			<form class="admin-login-form" method="POST" action="/admin/login">
+				<div class="form-group">
+					<label class="form-label">ACCESS KEY</label>
+					<input
+						class="form-input"
+						type="password"
+						name="key"
+						placeholder="••••••••••••"
+						autofocus
+						required
+					/>
+				</div>
+				if wrongKey {
+					<div class="admin-login-error">
+						{ "// " }INVALID KEY — ACCESS DENIED
+					</div>
+				}
+				<button type="submit" class="btn-primary" style="width:100%;text-align:center;">
+					ENTER →
+				</button>
+			</form>
+		</div>
+	</div>
+}
+
+templ AdminLoginPage(wrongKey bool) {
+	@Layout("Admin Login — DESAI") {
+		@AdminLoginForm(wrongKey)
+	}
+}

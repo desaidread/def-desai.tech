@@ -1,0 +1,33 @@
+package templates
+
+import "site/models"
+
+templ IndexPage(d IndexData) {
+	@Layout("DESAI // PERSONAL") {
+		@Index(d)
+	}
+}
+
+templ PostFullPage(post models.Post) {
+	@Layout(post.Title + " — DESAI") {
+		@PostPage(post)
+	}
+}
+
+templ AboutPage() {
+	@Layout("About — DESAI") {
+		@About()
+	}
+}
+
+templ AdminIndexPage(posts []models.Post) {
+	@Layout("Admin — DESAI") {
+		@AdminIndex(posts)
+	}
+}
+
+templ AdminFormPage(post models.Post, isNew bool) {
+	@Layout("Admin: Edit — DESAI") {
+		@AdminForm(post, isNew)
+	}
+}

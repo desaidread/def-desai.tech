@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DESAI // PERSONAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Permanent+Marker&family=Share+Tech+Mono&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pink: #ff0077;
+  --pink2: #ff3399;
+  --green: #c8ff00;
+  --green2: #aaee00;
+  --black: #0a0a0a;
+  --white: #f0f0f0;
+  --gray: #1a1a1a;
+  --font-graffiti: 'Permanent Marker', cursive;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-heavy: 'Black Han Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-mono);
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* ── HALFTONE OVERLAY ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,0,119,0.03) 1px, transparent 1px);
+  background-size: 8px 8px;
+  pointer-events: none;
+  z-index: 9000;
+}
+
+/* ── NOISE TEXTURE ── */
+.noise {
+  position: fixed;
+  inset: 0;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 9001;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--pink); }
+
+/* ── HALFTONE DOT BG ── */
+.dot-bg {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+
+.dot-bg-pink {
+  background-image: radial-gradient(circle, rgba(255,0,119,0.15) 1.5px, transparent 1.5px);
+  background-size: 10px 10px;
+}
+
+/* ── TORN EDGE (SVG clip) ── */
+.torn-bottom {
+  position: relative;
+}
+.torn-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  width: 100%;
+  height: 22px;
+  background: inherit;
+  clip-path: polygon(
+    0% 0%, 2% 100%, 5% 20%, 8% 90%, 11% 10%,
+    14% 80%, 17% 5%, 20% 75%, 23% 15%,
+    26% 85%, 29% 0%, 32% 95%, 35% 5%,
+    38% 70%, 41% 20%, 44% 90%, 47% 10%,
+    50% 80%, 53% 0%, 56% 85%, 59% 15%,
+    62% 95%, 65% 5%, 68% 75%, 71% 20%,
+    74% 88%, 77% 10%, 80% 70%, 83% 5%,
+    86% 95%, 89% 15%, 92% 80%, 95% 0%,
+    98% 90%, 100% 20%, 100% 0%
+  );
+  z-index: 2;
+}
+
+/* ── HEADER ── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--black);
+  border-bottom: 3px solid var(--pink);
+  padding: 0 2rem;
+}
+
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: 4px;
+  color: var(--white);
+  text-decoration: none;
+  position: relative;
+}
+
+.nav-logo span { color: var(--pink); }
+
+nav { display: flex; align-items: center; gap: 0; }
+
+nav a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(240,240,240,0.5);
+  text-decoration: none;
+  padding: 8px 14px;
+  transition: color 0.15s, background 0.15s;
+  border-left: 1px solid rgba(255,0,119,0.15);
+}
+
+nav a:hover, nav a.active {
+  color: var(--pink);
+  background: rgba(255,0,119,0.08);
+}
+
+.header-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--green);
+  border: 1px solid var(--green);
+  padding: 3px 8px;
+  animation: tagflash 3s infinite;
+}
+
+@keyframes tagflash {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ── HERO ── */
+.hero {
+  background: var(--black);
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  min-height: 520px;
+  display: flex;
+}
+
+/* big pink halftone bg */
+.hero::before {
+  content: '';
+  position: absolute;
+  right: -100px;
+  top: -60px;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: var(--pink);
+  background-image: radial-gradient(circle, rgba(0,0,0,0.4) 1.5px, transparent 1.5px);
+  background-size: 10px 10px;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.hero-left {
+  flex: 1;
+  padding: 4rem 2rem 4rem 4rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--green);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  width: 30px;
+  height: 2px;
+  background: var(--green);
+}
+
+.hero-name {
+  font-family: var(--font-display);
+  font-size: clamp(80px, 14vw, 160px);
+  line-height: 0.88;
+  letter-spacing: -2px;
+  color: var(--white);
+  position: relative;
+  margin-bottom: 1.5rem;
+  width: fit-content;
+}
+
+.hero-name .stroke {
+  -webkit-text-stroke: 3px var(--pink);
+  color: transparent;
+}
+
+.hero-name .filled { color: var(--pink); }
+
+.hero-name .small-line {
+  font-size: clamp(20px, 3vw, 32px);
+  color: var(--green);
+  letter-spacing: 8px;
+  display: block;
+  -webkit-text-stroke: 0;
+}
+
+/* glitch on name */
+.hero-name::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 3px;
+  left: -3px;
+  color: var(--pink);
+  clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+  animation: hero-glitch 5s infinite steps(1);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+@keyframes hero-glitch {
+  0%,85%,100% { opacity: 0; transform: translateX(0); }
+  86% { opacity: 0.7; transform: translateX(4px); }
+  88% { opacity: 0.7; transform: translateX(-4px); }
+  90% { opacity: 0; }
+}
+
+.hero-desc {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: rgba(240,240,240,0.55);
+  line-height: 2;
+  max-width: 480px;
+  margin-bottom: 2.5rem;
+  border-left: 3px solid var(--pink);
+  padding-left: 1rem;
+}
+
+.hero-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 3px;
+  background: var(--pink);
+  color: var(--black);
+  padding: 10px 28px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  display: inline-block;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+.btn-primary:hover { background: var(--green); transform: translate(-2px,-2px); }
+
+.btn-outline {
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 3px;
+  background: transparent;
+  color: var(--white);
+  padding: 10px 28px;
+  text-decoration: none;
+  border: 2px solid rgba(240,240,240,0.3);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  display: inline-block;
+}
+
+.btn-outline:hover { border-color: var(--green); color: var(--green); }
+
+/* ── HERO DECO PANEL ── */
+.hero-deco {
+  width: 380px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.hero-deco-inner {
+  width: 100%;
+  height: 100%;
+  background: var(--pink);
+  background-image: radial-gradient(circle, rgba(0,0,0,0.5) 1.5px, transparent 1.5px);
+  background-size: 8px 8px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+  clip-path: polygon(40px 0, 100% 0, 100% 100%, 0 100%, 0 40px);
+}
+
+.deco-big-text {
+  font-family: var(--font-display);
+  font-size: 120px;
+  color: rgba(0,0,0,0.25);
+  letter-spacing: -4px;
+  line-height: 1;
+  padding-bottom: 20px;
+  padding-right: 20px;
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.deco-tag {
+  position: absolute;
+  top: 20px;
+  left: -10px;
+  background: var(--green);
+  color: var(--black);
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 3px;
+  padding: 6px 20px 6px 16px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+
+.deco-badge {
+  position: absolute;
+  bottom: 40px;
+  right: 20px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: var(--black);
+  border: 3px solid var(--green);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  transform: rotate(-15deg);
+}
+
+.deco-badge span:first-child {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--green);
+  letter-spacing: 1px;
+}
+
+.deco-badge span:last-child {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  color: rgba(240,240,240,0.5);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ── MARQUEE STRIP ── */
+.marquee-strip {
+  background: var(--pink);
+  padding: 10px 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+  border-top: 2px solid var(--black);
+  border-bottom: 2px solid var(--black);
+}
+
+.marquee-track {
+  display: flex;
+  white-space: nowrap;
+  animation: marquee 20s linear infinite;
+  gap: 0;
+}
+
+.marquee-item {
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 4px;
+  color: var(--black);
+  padding: 0 2rem;
+  text-transform: uppercase;
+}
+
+.marquee-sep { color: rgba(0,0,0,0.35); }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ── ABOUT STRIP ── */
+.about-strip {
+  background: var(--gray);
+  border-bottom: 3px solid var(--green);
+  padding: 3rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-strip::before {
+  content: 'ABOUT';
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  font-family: var(--font-display);
+  font-size: 100px;
+  color: rgba(255,255,255,0.03);
+  letter-spacing: 10px;
+  pointer-events: none;
+}
+
+.about-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.about-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--pink);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.about-label::before {
+  content: '';
+  width: 20px;
+  height: 1px;
+  background: var(--pink);
+}
+
+.about-heading {
+  font-family: var(--font-display);
+  font-size: 36px;
+  color: var(--white);
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+
+.about-text {
+  font-size: 12px;
+  color: rgba(240,240,240,0.5);
+  line-height: 2;
+}
+
+.skill-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skill-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.skill-name {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--white);
+}
+
+.skill-pct { color: var(--green); }
+
+.skill-bar-bg {
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+}
+
+.skill-bar {
+  height: 100%;
+  background: var(--pink);
+  position: relative;
+  transition: width 1.5s ease;
+}
+
+.skill-bar.green { background: var(--green); }
+
+.contact-items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  text-decoration: none;
+  color: var(--white);
+  transition: color 0.15s;
+}
+
+.contact-item:hover { color: var(--green); }
+
+.contact-icon {
+  width: 32px;
+  height: 32px;
+  background: rgba(255,0,119,0.1);
+  border: 1px solid rgba(255,0,119,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.contact-label {
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 2px;
+  display: block;
+  line-height: 1;
+}
+
+.contact-sub {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: rgba(240,240,240,0.4);
+  letter-spacing: 1px;
+}
+
+/* ── LAYOUT ── */
+.site-wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 3rem;
+}
+
+/* ── SECTION LABELS ── */
+.sec-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+.sec-num {
+  font-family: var(--font-display);
+  font-size: 11px;
+  color: var(--pink);
+  letter-spacing: 2px;
+}
+
+.sec-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--white);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.sec-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,0,119,0.4), transparent);
+}
+
+/* ── POST CARDS ── */
+.featured-card {
+  background: var(--gray);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+  cursor: pointer;
+  border: 1px solid rgba(255,0,119,0.2);
+  transition: border-color 0.2s;
+}
+
+.featured-card:hover { border-color: var(--pink); }
+
+.featured-banner {
+  height: 260px;
+  background: var(--black);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.featured-banner-inner {
+  width: 100%;
+  height: 100%;
+  background: var(--pink);
+  background-image: radial-gradient(circle, rgba(0,0,0,0.45) 1.5px, transparent 1.5px);
+  background-size: 9px 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.banner-title-big {
+  font-family: var(--font-display);
+  font-size: 90px;
+  letter-spacing: -2px;
+  color: rgba(0,0,0,0.3);
+  position: absolute;
+  bottom: -10px;
+  right: 20px;
+  line-height: 1;
+}
+
+.banner-label {
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 6px;
+  color: var(--black);
+  background: var(--green);
+  padding: 5px 16px;
+  position: absolute;
+  top: 20px;
+  left: 0;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+
+.featured-body { padding: 1.5rem; }
+
+.post-tags {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.ptag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border: 1px solid;
+}
+
+.ptag-pink { color: var(--pink); border-color: rgba(255,0,119,0.5); background: rgba(255,0,119,0.08); }
+.ptag-green { color: var(--green); border-color: rgba(200,255,0,0.5); background: rgba(200,255,0,0.06); }
+.ptag-white { color: var(--white); border-color: rgba(240,240,240,0.3); background: rgba(240,240,240,0.04); }
+
+.post-date {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: rgba(240,240,240,0.3);
+  letter-spacing: 2px;
+  margin-left: auto;
+}
+
+.featured-title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3.5vw, 34px);
+  color: var(--white);
+  line-height: 1.1;
+  letter-spacing: 1px;
+  margin-bottom: 0.75rem;
+}
+
+.post-excerpt {
+  font-size: 12px;
+  color: rgba(240,240,240,0.45);
+  line-height: 2;
+  margin-bottom: 1.25rem;
+}
+
+.post-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.read-link {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--pink);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: gap 0.2s, color 0.2s;
+}
+
+.read-link:hover { gap: 12px; color: var(--green); }
+
+.post-views {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: rgba(240,240,240,0.3);
+  letter-spacing: 1px;
+}
+
+/* GRID CARDS */
+.posts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.post-card {
+  background: var(--gray);
+  border: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.post-card:hover {
+  border-color: rgba(255,0,119,0.5);
+  transform: translate(-3px,-3px);
+  box-shadow: 3px 3px 0 var(--pink);
+}
+
+.card-stripe {
+  height: 4px;
+  background: var(--pink);
+}
+
+.card-stripe.green { background: var(--green); }
+.card-stripe.checker {
+  background: repeating-linear-gradient(90deg, var(--pink) 0, var(--pink) 8px, var(--green) 8px, var(--green) 16px);
+}
+.card-stripe.diag {
+  background: repeating-linear-gradient(45deg, var(--pink) 0, var(--pink) 4px, transparent 4px, transparent 8px);
+  background-size: 11px 11px;
+}
+
+.card-body { padding: 1.2rem; }
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: var(--white);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.card-excerpt {
+  font-size: 11px;
+  color: rgba(240,240,240,0.4);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+/* ── LIST POSTS ── */
+.post-list { display: flex; flex-direction: column; }
+
+.list-item {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: 1rem;
+  align-items: start;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.list-item:hover { background: rgba(255,0,119,0.04); padding-left: 8px; }
+.list-item:last-child { border-bottom: none; }
+
+.list-num {
+  font-family: var(--font-display);
+  font-size: 30px;
+  color: rgba(255,0,119,0.2);
+  line-height: 1;
+  text-align: right;
+}
+
+.list-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  letter-spacing: 1px;
+  color: var(--white);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.list-meta {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: rgba(240,240,240,0.3);
+  letter-spacing: 1px;
+}
+
+.list-meta .lcat { color: var(--pink); }
+
+.list-arrow {
+  font-size: 18px;
+  color: rgba(255,0,119,0.3);
+  padding-top: 4px;
+  transition: color 0.15s, transform 0.15s;
+}
+
+.list-item:hover .list-arrow { color: var(--pink); transform: translateX(4px); }
+
+/* ── SIDEBAR ── */
+.sidebar { display: flex; flex-direction: column; gap: 2rem; }
+
+.widget {
+  background: var(--gray);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.widget-head {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 4px;
+  color: var(--green);
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.widget-head-num {
+  font-family: var(--font-display);
+  font-size: 11px;
+  color: rgba(200,255,0,0.4);
+}
+
+/* Tags */
+.tag-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-pill {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(240,240,240,0.4);
+}
+
+.tag-pill:hover {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: var(--black);
+}
+
+.tag-pill.active {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: var(--black);
+}
+
+/* Sidebar posts */
+.side-post {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.side-post:last-child { border-bottom: none; }
+.side-post:hover { background: rgba(255,0,119,0.04); }
+
+.side-num {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: rgba(255,0,119,0.25);
+  line-height: 1;
+  min-width: 28px;
+}
+
+.side-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  color: var(--white);
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.side-date {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: rgba(240,240,240,0.3);
+}
+
+/* Mini profile */
+.profile-card {
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
+  background: var(--pink);
+  background-image: radial-gradient(circle, rgba(0,0,0,0.5) 1.5px, transparent 1.5px);
+  background-size: 8px 8px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.profile-avatar-inner {
+  width: 64px;
+  height: 64px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background: var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--green);
+  letter-spacing: 1px;
+}
+
+.profile-name {
+  font-family: var(--font-display);
+  font-size: 26px;
+  letter-spacing: 4px;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.profile-handle {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--pink);
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+}
+
+.profile-bio {
+  font-size: 11px;
+  color: rgba(240,240,240,0.4);
+  line-height: 1.8;
+  margin-bottom: 1.25rem;
+}
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: rgba(255,255,255,0.06);
+  margin-bottom: 1.25rem;
+}
+
+.pstat {
+  background: var(--gray);
+  padding: 10px 4px;
+  text-align: center;
+}
+
+.pstat-num {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--green);
+  display: block;
+  line-height: 1;
+}
+
+.pstat-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: rgba(240,240,240,0.3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ── PAGINATION ── */
+.pagination {
+  display: flex;
+  gap: 4px;
+  padding: 2rem 0 0;
+  justify-content: center;
+}
+
+.ppage {
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: 2px;
+  padding: 6px 14px;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(240,240,240,0.4);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ppage:hover, .ppage.active {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: var(--black);
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--gray);
+  border-top: 3px solid var(--pink);
+  padding: 3rem 2rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+footer::before {
+  content: 'DESAI';
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  font-family: var(--font-display);
+  font-size: 120px;
+  color: rgba(255,0,119,0.05);
+  letter-spacing: 20px;
+  pointer-events: none;
+}
+
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 2rem;
+}
+
+.footer-brand-name {
+  font-family: var(--font-display);
+  font-size: 48px;
+  letter-spacing: 6px;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+
+.footer-brand-name span { color: var(--pink); }
+
+.footer-brand-text {
+  font-size: 11px;
+  color: rgba(240,240,240,0.4);
+  line-height: 2;
+  max-width: 280px;
+}
+
+.footer-nav-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--green);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.footer-nav { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+
+.footer-nav a {
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: 2px;
+  color: rgba(240,240,240,0.4);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer-nav a:hover { color: var(--pink); }
+
+.footer-bottom {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-bottom p {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: rgba(240,240,240,0.25);
+  letter-spacing: 2px;
+}
+
+.footer-bottom span { color: var(--pink); }
+
+@media (max-width: 900px) {
+  .site-wrap { grid-template-columns: 1fr; }
+  .posts-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+  nav a { padding: 8px 10px; font-size: 10px; }
+  .hero-deco { display: none; }
+  .about-inner { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a class="nav-logo" href="/">DE<span>SAI</span></a>
+    <nav>
+      <a href="/" class="active">FEED</a>
+      <a href="/projects">PROJECTS</a>
+      <a href="/about">ABOUT</a>
+      <a href="/contact">CONTACT</a>
+    </nav>
+    <span class="header-tag">AVAILABLE FOR HIRE</span>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero dot-bg">
+  <div class="hero-left">
+    <div class="hero-eyebrow">PERSONAL BROADCAST</div>
+    <h1 class="hero-name" data-text="DESAI">
+      <span class="stroke">DE</span><span class="filled">SAI</span>
+      <span class="small-line">// MAKE IT WEIRD</span>
+    </h1>
+    <p class="hero-desc">
+      РАЗРАБОТЧИК / ХАКЕР-МЫШЛЕНИЯ / СОЗДАТЕЛЬ ВЕЩЕЙ<br>
+      Пишу о том что строю. Строю то о чём думаю.<br>
+      Иногда выкладываю код. Часто — мысли вслух.
+    </p>
+    <div class="hero-links">
+      <a href="/blog" class="btn-primary">ЧИТАТЬ БЛОГ</a>
+      <a href="/about" class="btn-outline">ОБО МНЕ →</a>
+    </div>
+  </div>
+
+  <div class="hero-deco">
+    <div class="hero-deco-inner">
+      <div class="deco-tag">DESAI.DEV</div>
+      <div class="deco-big-text">DS<br>AI</div>
+      <div class="deco-badge">
+        <span>2025</span>
+        <span>ONLINE</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <span class="marquee-item">PERSONAL BLOG <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">MAKE IT WEIRD <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">DESAI.DEV <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">OPEN SOURCE <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">NO BULLSHIT <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">SHIP IT <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">PERSONAL BLOG <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">MAKE IT WEIRD <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">DESAI.DEV <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">OPEN SOURCE <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">NO BULLSHIT <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">SHIP IT <span class="marquee-sep">✦</span></span>
+  </div>
+</div>
+
+<!-- ABOUT STRIP -->
+<section class="about-strip">
+  <div class="about-inner">
+    <div>
+      <div class="about-label">Identity</div>
+      <div class="about-heading">КТО<br>Я ТАКОЙ</div>
+      <p class="about-text">
+        Разработчик который делает штуки. Пишу бэкенд на Go,
+        иногда ломаю фронтенд, читаю маньяков от программирования
+        и делюсь мыслями здесь. Этот блог — мой цифровой след.
+      </p>
+    </div>
+    <div>
+      <div class="about-label">Stack</div>
+      <div class="about-heading">ЧЕМ<br>ЗАНЯТ</div>
+      <ul class="skill-list">
+        <li class="skill-item">
+          <div class="skill-name"><span>GO / BACKEND</span><span class="skill-pct">90%</span></div>
+          <div class="skill-bar-bg"><div class="skill-bar" style="width:90%"></div></div>
+        </li>
+        <li class="skill-item">
+          <div class="skill-name"><span>SYSTEMS / LINUX</span><span class="skill-pct">80%</span></div>
+          <div class="skill-bar-bg"><div class="skill-bar green" style="width:80%"></div></div>
+        </li>
+        <li class="skill-item">
+          <div class="skill-name"><span>WEB / FRONTEND</span><span class="skill-pct">65%</span></div>
+          <div class="skill-bar-bg"><div class="skill-bar" style="width:65%"></div></div>
+        </li>
+        <li class="skill-item">
+          <div class="skill-name"><span>SECURITY / CTF</span><span class="skill-pct">70%</span></div>
+          <div class="skill-bar-bg"><div class="skill-bar green" style="width:70%"></div></div>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <div class="about-label">Links</div>
+      <div class="about-heading">СВЯЗЬ</div>
+      <div class="contact-items">
+        <a href="#" class="contact-item">
+          <div class="contact-icon">GH</div>
+          <div>
+            <span class="contact-label">GITHUB</span>
+            <span class="contact-sub">@DESAI // REPOS</span>
+          </div>
+        </a>
+        <a href="#" class="contact-item">
+          <div class="contact-icon">TG</div>
+          <div>
+            <span class="contact-label">TELEGRAM</span>
+            <span class="contact-sub">@DESAI // DM OPEN</span>
+          </div>
+        </a>
+        <a href="mailto:" class="contact-item">
+          <div class="contact-icon">@</div>
+          <div>
+            <span class="contact-label">EMAIL</span>
+            <span class="contact-sub">HI@DESAI.DEV</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN BLOG LAYOUT -->
+<div class="site-wrap">
+
+  <main>
+
+    <!-- FEATURED -->
+    <div class="sec-label">
+      <span class="sec-num">01</span>
+      <span class="sec-title">FEATURED</span>
+      <div class="sec-line"></div>
+    </div>
+
+    <article class="featured-card">
+      <div class="featured-banner">
+        <div class="featured-banner-inner">
+          <div class="banner-label">PINNED POST</div>
+          <div class="banner-title-big">POST</div>
+          <svg width="100%" height="100%" style="position:absolute;inset:0;opacity:0.4" viewBox="0 0 800 260" preserveAspectRatio="xMidYMid slice">
+            <line x1="0" y1="80" x2="800" y2="80" stroke="rgba(0,0,0,0.3)" stroke-width="1" stroke-dasharray="4,8"/>
+            <line x1="0" y1="160" x2="800" y2="160" stroke="rgba(0,0,0,0.3)" stroke-width="1" stroke-dasharray="4,8"/>
+            <line x1="200" y1="0" x2="200" y2="260" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+            <line x1="500" y1="0" x2="500" y2="260" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+            <polygon points="400,30 440,80 400,130 360,80" fill="rgba(0,0,0,0.25)" stroke="rgba(0,0,0,0.4)" stroke-width="2"/>
+            <text x="400" y="86" font-family="'Bebas Neue'" font-size="28" text-anchor="middle" fill="rgba(0,0,0,0.5)" letter-spacing="2">DESAI</text>
+          </svg>
+        </div>
+      </div>
+      <div class="featured-body">
+        <div class="post-tags">
+          <span class="ptag ptag-pink">FEATURED</span>
+          <span class="ptag ptag-green">GO</span>
+          <span class="ptag ptag-white">BACKEND</span>
+          <span class="post-date">2025-04-12</span>
+        </div>
+        <h2 class="featured-title">Как я написал собственный HTTP-фреймворк на Go — и почему это была ужасная идея</h2>
+        <p class="post-excerpt">
+          Полтора месяца жизни, 4000 строк кода и один вопрос: зачем? Разбираю архитектуру, ошибки которые я совершил, и что в итоге получилось. Спойлер: это работает, но в продакшн не ставьте.
+        </p>
+        <div class="post-footer">
+          <div class="post-views">1.2K VIEWS // 8 MIN READ</div>
+          <a href="#" class="read-link">ЧИТАТЬ ПОСТ →</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- GRID -->
+    <div class="sec-label">
+      <span class="sec-num">02</span>
+      <span class="sec-title">ПОСЛЕДНЕЕ</span>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="posts-grid">
+      <article class="post-card">
+        <div class="card-stripe"></div>
+        <div class="card-body">
+          <div class="post-tags">
+            <span class="ptag ptag-pink">LINUX</span>
+            <span class="post-date">04-10</span>
+          </div>
+          <h3 class="card-title">Настраиваю рабочее окружение с нуля: Arch, Hyprland и минимализм</h3>
+          <p class="card-excerpt">Dotfiles, workflow и почему я потратил неделю чтобы нарисовать красивый терминал.</p>
+          <div class="post-footer">
+            <span class="post-views">640 VIEWS</span>
+            <a href="#" class="read-link">→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="post-card">
+        <div class="card-stripe green"></div>
+        <div class="card-body">
+          <div class="post-tags">
+            <span class="ptag ptag-green">МЫСЛИ</span>
+            <span class="post-date">04-08</span>
+          </div>
+          <h3 class="card-title">О перфекционизме в коде: когда «хорошо» убивает «работает»</h3>
+          <p class="card-excerpt">Короткое эссе про то как я рефакторил одну функцию три раза и всё равно недоволен.</p>
+          <div class="post-footer">
+            <span class="post-views">450 VIEWS</span>
+            <a href="#" class="read-link">→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="post-card">
+        <div class="card-stripe checker"></div>
+        <div class="card-body">
+          <div class="post-tags">
+            <span class="ptag ptag-white">OPEN SOURCE</span>
+            <span class="post-date">04-05</span>
+          </div>
+          <h3 class="card-title">Мой первый мерж в крупный open-source проект: история и уроки</h3>
+          <p class="card-excerpt">Три недели ревью, 47 комментариев, один мерж. Что я узнал о чужом коде.</p>
+          <div class="post-footer">
+            <span class="post-views">820 VIEWS</span>
+            <a href="#" class="read-link">→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="post-card">
+        <div class="card-stripe diag"></div>
+        <div class="card-body">
+          <div class="post-tags">
+            <span class="ptag ptag-pink">SECURITY</span>
+            <span class="post-date">04-01</span>
+          </div>
+          <h3 class="card-title">Разбираем CTF: как я нашёл SQL-инъекцию за 3 минуты (и зафейлил финал)</h3>
+          <p class="card-excerpt">Writeup с последнего CTF. Весело, быстро, болезненно под конец.</p>
+          <div class="post-footer">
+            <span class="post-views">990 VIEWS</span>
+            <a href="#" class="read-link">→</a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- LIST -->
+    <div class="sec-label">
+      <span class="sec-num">03</span>
+      <span class="sec-title">АРХИВ</span>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="post-list">
+      <div class="list-item">
+        <div class="list-num">04</div>
+        <div>
+          <div class="list-title">Пишем бинарный протокол с нуля: без protobuf, без JSON, только биты</div>
+          <div class="list-meta"><span class="lcat">GO //</span> 2025-03-28 // 6 MIN READ</div>
+        </div>
+        <div class="list-arrow">›</div>
+      </div>
+      <div class="list-item">
+        <div class="list-num">05</div>
+        <div>
+          <div class="list-title">Почему я перешёл с VSCode на Neovim и не вернулся (но понимаю тех кто вернулся)</div>
+          <div class="list-meta"><span class="lcat">TOOLS //</span> 2025-03-21 // 4 MIN READ</div>
+        </div>
+        <div class="list-arrow">›</div>
+      </div>
+      <div class="list-item">
+        <div class="list-num">06</div>
+        <div>
+          <div class="list-title">Горутины: когда их слишком много и как это не допустить</div>
+          <div class="list-meta"><span class="lcat">GO //</span> 2025-03-14 // 7 MIN READ</div>
+        </div>
+        <div class="list-arrow">›</div>
+      </div>
+      <div class="list-item">
+        <div class="list-num">07</div>
+        <div>
+          <div class="list-title">Книги которые изменили то как я думаю о программировании</div>
+          <div class="list-meta"><span class="lcat">МЫСЛИ //</span> 2025-03-07 // 3 MIN READ</div>
+        </div>
+        <div class="list-arrow">›</div>
+      </div>
+      <div class="list-item">
+        <div class="list-num">08</div>
+        <div>
+          <div class="list-title">Self-hosting всего: домашний сервер, отказы и что из этого вышло</div>
+          <div class="list-meta"><span class="lcat">LINUX //</span> 2025-02-28 // 10 MIN READ</div>
+        </div>
+        <div class="list-arrow">›</div>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button class="ppage">«</button>
+      <button class="ppage active">01</button>
+      <button class="ppage">02</button>
+      <button class="ppage">03</button>
+      <button class="ppage">»</button>
+    </div>
+
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- Profile -->
+    <div class="widget">
+      <div class="profile-card">
+        <div class="profile-avatar">
+          <div class="profile-avatar-inner">DS</div>
+        </div>
+        <div class="profile-name">DESAI</div>
+        <div class="profile-handle">@DESAI // MAKER</div>
+        <p class="profile-bio">Пишу, строю, ломаю.<br>Иногда всё сразу.</p>
+        <div class="profile-stats">
+          <div class="pstat">
+            <span class="pstat-num">24</span>
+            <span class="pstat-label">POSTS</span>
+          </div>
+          <div class="pstat">
+            <span class="pstat-num">12K</span>
+            <span class="pstat-label">VIEWS</span>
+          </div>
+          <div class="pstat">
+            <span class="pstat-num">3yr</span>
+            <span class="pstat-label">ONLINE</span>
+          </div>
+        </div>
+        <a href="/about" class="btn-primary" style="font-size:13px;padding:8px 20px;display:block;text-align:center;">ОБО МНЕ</a>
+      </div>
+    </div>
+
+    <!-- Popular -->
+    <div class="widget">
+      <div class="widget-head">
+        ПОПУЛЯРНОЕ
+        <span class="widget-head-num">TOP 5</span>
+      </div>
+      <div class="side-post">
+        <div class="side-num">1</div>
+        <div>
+          <div class="side-title">Пишем HTTP-фреймворк на Go с нуля</div>
+          <div class="side-date">1.2K VIEWS // GO</div>
+        </div>
+      </div>
+      <div class="side-post">
+        <div class="side-num">2</div>
+        <div>
+          <div class="side-title">CTF Writeup: SQL за 3 минуты</div>
+          <div class="side-date">990 VIEWS // SEC</div>
+        </div>
+      </div>
+      <div class="side-post">
+        <div class="side-num">3</div>
+        <div>
+          <div class="side-title">Self-hosting всего</div>
+          <div class="side-date">880 VIEWS // LINUX</div>
+        </div>
+      </div>
+      <div class="side-post">
+        <div class="side-num">4</div>
+        <div>
+          <div class="side-title">Open source: первый мерж</div>
+          <div class="side-date">820 VIEWS // OSS</div>
+        </div>
+      </div>
+      <div class="side-post">
+        <div class="side-num">5</div>
+        <div>
+          <div class="side-title">Горутины: когда их слишком много</div>
+          <div class="side-date">770 VIEWS // GO</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div class="widget">
+      <div class="widget-head">ТЕГИ</div>
+      <div class="tag-grid">
+        <span class="tag-pill active">GO</span>
+        <span class="tag-pill">LINUX</span>
+        <span class="tag-pill">SECURITY</span>
+        <span class="tag-pill">МЫСЛИ</span>
+        <span class="tag-pill">TOOLS</span>
+        <span class="tag-pill">OPEN SOURCE</span>
+        <span class="tag-pill">CTF</span>
+        <span class="tag-pill">BACKEND</span>
+        <span class="tag-pill">NEOVIM</span>
+        <span class="tag-pill">UNIX</span>
+        <span class="tag-pill">BOOKS</span>
+        <span class="tag-pill">RANT</span>
+      </div>
+    </div>
+
+    <!-- RSS -->
+    <div class="widget" style="background:rgba(200,255,0,0.06);border-color:rgba(200,255,0,0.2);">
+      <div class="widget-head" style="color:var(--green);border-color:var(--green);">RSS / SUBSCRIBE</div>
+      <p style="font-size:11px;color:rgba(240,240,240,0.45);line-height:2;margin-bottom:1rem;">Подпишись на RSS или оставь email чтобы не пропустить новые посты.</p>
+      <div style="display:flex;gap:6px;">
+        <input type="email" placeholder="your@email.com" style="flex:1;background:var(--black);border:1px solid rgba(200,255,0,0.3);color:var(--green);font-family:var(--font-mono);font-size:10px;padding:8px 10px;outline:none;"/>
+        <button style="background:var(--green);border:none;color:#000;font-family:var(--font-display);font-size:13px;font-weight:700;padding:8px 12px;cursor:pointer;letter-spacing:1px;white-space:nowrap;">SUB</button>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand-name">DE<span>SAI</span></div>
+      <p class="footer-brand-text">
+        Персональный блог о разработке, Linux, и всём что меня интересует. Никакой рекламы. Никакого буллшита. Только то что я реально думаю.
+      </p>
+    </div>
+    <div>
+      <div class="footer-nav-title">Разделы</div>
+      <ul class="footer-nav">
+        <li><a href="/">ГЛАВНАЯ</a></li>
+        <li><a href="/blog">БЛОГ</a></li>
+        <li><a href="/projects">ПРОЕКТЫ</a></li>
+        <li><a href="/about">ОБО МНЕ</a></li>
+        <li><a href="/contact">КОНТАКТ</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-nav-title">Ссылки</div>
+      <ul class="footer-nav">
+        <li><a href="#">GITHUB</a></li>
+        <li><a href="#">TELEGRAM</a></li>
+        <li><a href="#">RSS FEED</a></li>
+        <li><a href="#">PGP KEY</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>// <span>DESAI</span>.DEV // MADE WITH GO + HTML // NO TRACKING //</p>
+    <p>BUILT BY <span>DESAI</span> ✦ 2025</p>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.tag-pill').forEach(t => {
+  t.addEventListener('click', function() {
+    document.querySelectorAll('.tag-pill').forEach(x => x.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+document.querySelectorAll('.ppage').forEach(b => {
+  b.addEventListener('click', function() {
+    if(this.textContent === '«' || this.textContent === '»') return;
+    document.querySelectorAll('.ppage').forEach(x => x.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Animate skill bars on load
+setTimeout(() => {
+  document.querySelectorAll('.skill-bar').forEach(b => {
+    const w = b.style.width;
+    b.style.width = '0';
+    b.style.transition = 'width 1.4s cubic-bezier(0.4,0,0.2,1)';
+    setTimeout(() => { b.style.width = w; }, 100);
+  });
+}, 200);
+
+// Random card glitch hover
+document.querySelectorAll('.post-card, .featured-card').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    if(Math.random() > 0.5) {
+      const t = card.querySelector('.card-title, .featured-title');
+      if(!t) return;
+      t.style.transform = `translateX(${(Math.random()-0.5)*6}px)`;
+      t.style.color = Math.random() > 0.5 ? 'var(--pink)' : 'var(--green)';
+      setTimeout(() => {
+        t.style.transform = '';
+        t.style.color = '';
+      }, 120);
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+package templates
+
+import (
+	"site/models"
+	"strings"
+)
+
+templ AdminForm(post models.Post, isNew bool) {
+	<div class="admin-wrap">
+		<div class="admin-page-header">
+			<div>
+				<div class="admin-eyebrow">CONTROL PANEL</div>
+				if isNew {
+					<h1 class="admin-title">ADMIN<span>{ "//" }</span>NEW POST</h1>
+				} else {
+					<h1 class="admin-title">ADMIN<span>{ "//" }</span>EDIT</h1>
+				}
+			</div>
+			<a
+				href="/admin"
+				class="btn-outline"
+				hx-get="/admin"
+				hx-target="#content"
+				hx-push-url="true"
+			>← НАЗАД</a>
+		</div>
+		<form
+			class="admin-form"
+			action={ func() string {
+				if isNew { return "/admin/new" }
+				return "/admin/edit/" + post.Slug
+			}() }
+			method="POST"
+		>
+			<div class="admin-form-grid">
+				<!-- Left column -->
+				<div class="admin-form-left">
+					<div class="form-group">
+						<label class="form-label">TITLE *</label>
+						<input
+							class="form-input"
+							type="text"
+							name="title"
+							value={ post.Title }
+							placeholder="Заголовок поста..."
+							required
+							oninput="autoSlug(this)"
+						/>
+					</div>
+					<div class="form-group">
+						<label class="form-label">SLUG</label>
+						<div class="form-slug-wrap">
+							<span class="form-slug-prefix">/posts/</span>
+							<input
+								class="form-input form-slug-input"
+								type="text"
+								name="slug"
+								id="slug-input"
+								value={ post.Slug }
+								placeholder="auto-generated"
+								if !isNew {
+									readonly
+								}
+							/>
+						</div>
+						if !isNew {
+							<p class="form-hint">Slug нельзя изменить после создания</p>
+						}
+					</div>
+					<div class="form-group">
+						<label class="form-label">SUMMARY</label>
+						<input
+							class="form-input"
+							type="text"
+							name="summary"
+							value={ post.Summary }
+							placeholder="Краткое описание..."
+						/>
+					</div>
+					<div class="form-row">
+						<div class="form-group">
+							<label class="form-label">DATE *</label>
+							<input
+								class="form-input"
+								type="date"
+								name="date"
+								value={ post.Date.Format("2006-01-02") }
+								required
+							/>
+						</div>
+						<div class="form-group">
+							<label class="form-label">TAGS</label>
+							<input
+								class="form-input"
+								type="text"
+								name="tags"
+								value={ strings.Join(post.Tags, ", ") }
+								placeholder="go, htmx, web..."
+							/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="form-check">
+							<input
+								type="checkbox"
+								name="featured"
+								value="true"
+								if post.Featured {
+									checked
+								}
+							/>
+							<span class="form-check-label">FEATURED POST (закреплён наверху)</span>
+						</label>
+					</div>
+				</div>
+				<!-- Right: content editor -->
+				<div class="admin-form-right">
+					<div class="form-group" style="height:100%;">
+						<label class="form-label">CONTENT (Markdown) *</label>
+						<textarea
+							class="form-textarea"
+							name="content"
+							placeholder="# Заголовок&#10;&#10;Текст поста в Markdown формате..."
+							required
+						>{ post.Content }</textarea>
+					</div>
+				</div>
+			</div>
+			<div class="admin-form-actions">
+				if isNew {
+					<button type="submit" class="btn-primary" style="font-size:16px;letter-spacing:3px;">ОПУБЛИКОВАТЬ →</button>
+				} else {
+					<button type="submit" class="btn-primary" style="font-size:16px;letter-spacing:3px;">СОХРАНИТЬ →</button>
+				}
+				<a
+					href="/admin"
+					class="btn-outline"
+					hx-get="/admin"
+					hx-target="#content"
+					hx-push-url="true"
+				>ОТМЕНА</a>
+			</div>
+		</form>
+	</div>
+	<script>
+		function autoSlug(titleInput) {
+			const slugInput = document.getElementById('slug-input');
+			if (!slugInput || slugInput.hasAttribute('readonly')) return;
+			// Simple client-side slug generation
+			let slug = titleInput.value.toLowerCase()
+				.replace(/[а-яё]/g, c => {
+					const map = {а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'yo',ж:'zh',з:'z',и:'i',й:'y',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'kh',ц:'ts',ч:'ch',ш:'sh',щ:'shch',ъ:'',ы:'y',ь:'',э:'e',ю:'yu',я:'ya'};
+					return map[c] || '';
+				})
+				.replace(/[^a-z0-9\s-]/g, '')
+				.replace(/[\s]+/g, '-')
+				.replace(/-+/g, '-')
+				.replace(/^-|-$/g, '');
+			slugInput.value = slug;
+		}
+	</script>
+}

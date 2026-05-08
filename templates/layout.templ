@@ -1,0 +1,131 @@
+package templates
+
+templ Layout(title string) {
+	<!DOCTYPE html>
+	<html lang="ru">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>{ title }</title>
+			<link rel="preconnect" href="https://fonts.googleapis.com"/>
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+			<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet"/>
+			<link rel="stylesheet" href="/static/style.css"/>
+			<script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js"></script>
+		</head>
+		<body>
+			<div class="noise"></div>
+			<header>
+				<div class="header-inner">
+					<a
+						class="nav-logo"
+						href="/"
+						hx-get="/"
+						hx-target="#content"
+						hx-push-url="true"
+					>DE<span>SAI</span></a>
+					<nav>
+						<a
+							href="/"
+							hx-get="/"
+							hx-target="#content"
+							hx-push-url="true"
+						>FEED</a>
+						<a
+							href="/about"
+							hx-get="/about"
+							hx-target="#content"
+							hx-push-url="true"
+						>ABOUT</a>
+					</nav>
+					<span class="header-tag">DESAI.DEV</span>
+				</div>
+			</header>
+			<div id="content">
+				{ children... }
+			</div>
+			<footer>
+				<div class="footer-inner">
+					<div>
+						<div class="footer-brand-name">DE<span>SAI</span></div>
+						<p class="footer-brand-text">
+							Персональный блог о разработке, Linux и всём интересном.
+							Никакой рекламы. Никакого буллшита.
+						</p>
+					</div>
+					<div>
+						<div class="footer-nav-title">Разделы</div>
+						<ul class="footer-nav">
+							<li>
+								<a href="/" hx-get="/" hx-target="#content" hx-push-url="true">ГЛАВНАЯ</a>
+							</li>
+							<li>
+								<a href="/about" hx-get="/about" hx-target="#content" hx-push-url="true">ОБО МНЕ</a>
+							</li>
+							</ul>
+					</div>
+					<div>
+						<div class="footer-nav-title">Ссылки</div>
+						<ul class="footer-nav">
+							<li><a href="#">GITHUB</a></li>
+							<li><a href="#">TELEGRAM</a></li>
+							<li><a href="/rss">RSS FEED</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="footer-bottom">
+					<p>{ "// " }<span>DESAI</span>{ ".DEV // MADE WITH GO + HTMX + TEMPL // NO TRACKING //" }</p>
+					<p>BUILT BY <span>DESAI</span>{ " ✦ 2026" }</p>
+				</div>
+			</footer>
+			<script>
+				// Skill bar animation
+				setTimeout(() => {
+					document.querySelectorAll('.skill-bar').forEach(b => {
+						const w = b.style.width;
+						b.style.width = '0';
+						b.style.transition = 'width 1.4s cubic-bezier(0.4,0,0.2,1)';
+						setTimeout(() => { b.style.width = w; }, 100);
+					});
+				}, 200);
+
+				// Card glitch on hover
+				document.addEventListener('mouseover', e => {
+					const card = e.target.closest('.post-card, .featured-card');
+					if (!card || Math.random() < 0.5) return;
+					const t = card.querySelector('.card-title, .featured-title');
+					if (!t) return;
+					t.style.transform = `translateX(${(Math.random()-0.5)*6}px)`;
+					t.style.color = Math.random() > 0.5 ? 'var(--pink)' : 'var(--green)';
+					setTimeout(() => { t.style.transform = ''; t.style.color = ''; }, 120);
+				});
+
+				// Tag pill client-side filter
+				document.addEventListener('click', e => {
+					const pill = e.target.closest('.tag-pill[data-tag]');
+					if (!pill) return;
+					const tag = pill.dataset.tag;
+					document.querySelectorAll('.tag-pill').forEach(p => p.classList.remove('active'));
+					pill.classList.add('active');
+					document.querySelectorAll('[data-tags]').forEach(card => {
+						const tags = card.dataset.tags ? card.dataset.tags.split(',') : [];
+						card.style.display = (!tag || tags.includes(tag)) ? '' : 'none';
+					});
+				});
+
+				// Re-init on HTMX swap
+				document.addEventListener('htmx:afterSwap', () => {
+					window.scrollTo({ top: 0, behavior: 'instant' });
+					setTimeout(() => {
+						document.querySelectorAll('.skill-bar').forEach(b => {
+							const w = b.style.width;
+							b.style.width = '0';
+							b.style.transition = 'width 1.4s cubic-bezier(0.4,0,0.2,1)';
+							setTimeout(() => { b.style.width = w; }, 100);
+						});
+					}, 200);
+				});
+			</script>
+		</body>
+	</html>
+}

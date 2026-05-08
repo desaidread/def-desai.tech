@@ -1,0 +1,358 @@
+package templates
+
+import (
+	"fmt"
+	"site/models"
+	"strings"
+)
+
+type IndexData struct {
+	Featured   *models.Post
+	Grid       []models.Post
+	List       []models.Post
+	AllTags    []string
+	Recent     []models.Post
+	ActiveTag  string
+	TotalPosts int
+}
+
+templ Index(d IndexData) {
+	<!-- HERO -->
+	<section class="hero dot-bg">
+		<div class="hero-left">
+			<div class="hero-eyebrow">PERSONAL BROADCAST</div>
+			<h1 class="hero-name" data-text="DESAI">
+				<span class="stroke">DE</span><span class="filled">SAI</span>
+				<span class="small-line">{ "// MAKE IT WEIRD" }</span>
+			</h1>
+			<p class="hero-desc">
+				РАЗРАБОТЧИК / КОЛДУН / СОЗДАТЕЛЬ ВЕЩЕЙ<br/>
+				Пишу о том что строю. Строю то о чём думаю.<br/>
+				Иногда выкладываю код. Часто — мысли вслух.
+			</p>
+			<div class="hero-links">
+				<a href="#posts" class="btn-primary">ЧИТАТЬ БЛОГ</a>
+				<a
+					href="/about"
+					class="btn-outline"
+					hx-get="/about"
+					hx-target="#content"
+					hx-push-url="true"
+				>ОБО МНЕ →</a>
+			</div>
+		</div>
+		<div class="hero-deco">
+			<div class="hero-deco-inner">
+				<div class="deco-tag">def-desai.tech</div>
+				<div class="deco-big-text">DS<br/>AI</div>
+				<div class="deco-badge">
+					<span>2026</span>
+					<span>ONLINE</span>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- MARQUEE -->
+	<div class="marquee-strip">
+		<div class="marquee-track">
+			for _, item := range []string{"PERSONAL BLOG", "MAKE IT WEIRD", "DEF-DESAI.TECH", "OPEN SOURCE", "NO BULLSHIT", "SHIP IT", "PERSONAL BLOG", "MAKE IT WEIRD", "DEF-DESAI.TECH", "OPEN SOURCE", "NO BULLSHIT", "SHIP IT"} {
+				<span class="marquee-item">{ item } <span class="marquee-sep">✦</span></span>
+			}
+		</div>
+	</div>
+	<!-- ABOUT STRIP -->
+	<section class="about-strip">
+			<div class="about-inner">
+				<div>
+					<div class="about-label">Identity</div>
+					<div class="about-heading">КТО<br/>Я ТАКОЙ</div>
+					<p class="about-text">
+						Чувак который что-то делает. Пишу бэкенд на Go,
+						иногда ломаю фронтенд, читаю маньяков от программирования
+						и делюсь мыслями здесь.<br/><br/>
+						Этот блог — мой цифровой след. Без рекламы, без трекинга.
+						Только то что я реально думаю и делаю.
+					</p>
+				</div>
+				<div>
+					<div class="about-label">Stack</div>
+					<div class="about-heading">ЧЕМ<br/>ЗАНЯТ</div>
+					<ul class="skill-list">
+						<li class="skill-item">
+							<div class="skill-name"><span>GO / BACKEND</span><span class="skill-pct">30%</span></div>
+							<div class="skill-bar-bg"><div class="skill-bar" style="width:90%"></div></div>
+						</li>
+						<li class="skill-item">
+							<div class="skill-name"><span>SYSTEMS / LINUX</span><span class="skill-pct">30%</span></div>
+							<div class="skill-bar-bg"><div class="skill-bar green" style="width:80%"></div></div>
+						</li>
+						<li class="skill-item">
+							<div class="skill-name"><span>WEB / FRONTEND</span><span class="skill-pct">5%</span></div>
+							<div class="skill-bar-bg"><div class="skill-bar" style="width:65%"></div></div>
+						</li>
+						<li class="skill-item">
+							<div class="skill-name"><span>HTMX / TEMPL</span><span class="skill-pct">20%</span></div>
+							<div class="skill-bar-bg"><div class="skill-bar" style="width:75%"></div></div>
+						</li>
+					</ul>
+				</div>
+				<div>
+					<div class="about-label">Links</div>
+					<div class="about-heading">СВЯЗЬ</div>
+					<div class="contact-items">
+						<a href="https://github.com/desaidread" class="contact-item">
+							<div class="contact-icon">GH</div>
+							<div>
+								<span class="contact-label">GITHUB</span>
+								<span class="contact-sub">{ "@DESAI // REPOS" }</span>
+							</div>
+						</a>
+						<a href="https://t.me/def_desai" class="contact-item">
+							<div class="contact-icon">TG</div>
+							<div>
+								<span class="contact-label">TELEGRAM</span>
+								<span class="contact-sub">{ "@DESAI // DM OPEN" }</span>
+							</div>
+						</a>
+						<a href="mailto:fodbog@gmail.com" class="contact-item">
+							<div class="contact-icon">{ "@" }</div>
+							<div>
+								<span class="contact-label">EMAIL</span>
+								<span class="contact-sub">FODBOG@GMAIL.COM</span>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+	<!-- MAIN FEED -->
+	<div class="site-wrap" id="posts">
+		<main>
+			@postsFeed(d)
+		</main>
+		<aside class="sidebar">
+			<!-- Profile -->
+			<div class="widget">
+				<div class="profile-card">
+					<div class="profile-avatar">
+						<div class="profile-avatar-inner">DS</div>
+					</div>
+					<div class="profile-name">DESAI</div>
+					<div class="profile-handle">{ "@DESAI // MAKER" }</div>
+					<p class="profile-bio">Пишу, строю, ломаю.<br/>Иногда всё сразу.</p>
+					<div class="profile-stats">
+						<div class="pstat">
+							<span class="pstat-num">{ fmt.Sprintf("%d", d.TotalPosts) }</span>
+							<span class="pstat-label">POSTS</span>
+						</div>
+						<div class="pstat">
+							<span class="pstat-num">{ fmt.Sprintf("%d", len(d.AllTags)) }</span>
+							<span class="pstat-label">TAGS</span>
+						</div>
+						<div class="pstat">
+							<span class="pstat-num">1yr</span>
+							<span class="pstat-label">ONLINE</span>
+						</div>
+					</div>
+					<a
+						href="/about"
+						class="btn-primary"
+						style="font-size:13px;padding:8px 20px;display:block;text-align:center;"
+						hx-get="/about"
+						hx-target="#content"
+						hx-push-url="true"
+					>ОБО МНЕ</a>
+				</div>
+			</div>
+			<!-- Recent -->
+			if len(d.Recent) > 0 {
+				<div class="widget">
+					<div class="widget-head">
+						СВЕЖЕЕ
+						<span class="widget-head-num">TOP { fmt.Sprintf("%d", len(d.Recent)) }</span>
+					</div>
+					for i, p := range d.Recent {
+						<a
+							class="side-post"
+							href={ templ.SafeURL("/posts/" + p.Slug) }
+							hx-get={ "/posts/" + p.Slug }
+							hx-target="#content"
+							hx-push-url={ "/posts/" + p.Slug }
+						>
+							<div class="side-num">{ fmt.Sprintf("%d", i+1) }</div>
+							<div>
+								<div class="side-title">{ p.Title }</div>
+								<div class="side-date">
+									{ fmt.Sprintf("%d %s", p.Date.Day(), monthRu(p.Date.Month())) }
+									if len(p.Tags) > 0 {
+										{ " // " + strings.ToUpper(p.Tags[0]) }
+									}
+								</div>
+							</div>
+						</a>
+					}
+				</div>
+			}
+			<!-- Tags -->
+			if len(d.AllTags) > 0 {
+				<div class="widget">
+					<div class="widget-head">ТЕГИ</div>
+					<div class="tag-grid">
+						for _, tag := range d.AllTags {
+							<span
+								class={ "tag-pill" + func() string {
+									if d.ActiveTag == tag { return " active" }
+									return ""
+								}() }
+								data-tag={ tag }
+							>{ strings.ToUpper(tag) }</span>
+						}
+						if d.ActiveTag != "" {
+							<span class="tag-pill" data-tag="">ВСЕ</span>
+						}
+					</div>
+				</div>
+			}
+		</aside>
+	</div>
+}
+
+templ postsFeed(d IndexData) {
+	if d.Featured != nil {
+		<!-- FEATURED -->
+		<div class="sec-label">
+			<span class="sec-num">01</span>
+			<span class="sec-title">FEATURED</span>
+			<div class="sec-line"></div>
+		</div>
+		<article
+			class="featured-card"
+			data-tags={ strings.Join(d.Featured.Tags, ",") }
+		>
+			<a
+				class="featured-link"
+				href={ templ.SafeURL("/posts/" + d.Featured.Slug) }
+				hx-get={ "/posts/" + d.Featured.Slug }
+				hx-target="#content"
+				hx-push-url={ "/posts/" + d.Featured.Slug }
+			>
+				<div class="featured-banner">
+					<div class="featured-banner-inner">
+						<div class="banner-label">
+							if d.Featured.Featured {
+								PINNED POST
+							} else {
+								LATEST
+							}
+						</div>
+						<div class="banner-title-big">POST</div>
+						<svg width="100%" height="100%" style="position:absolute;inset:0;opacity:0.4" viewBox="0 0 800 260" preserveAspectRatio="xMidYMid slice">
+							<line x1="0" y1="80" x2="800" y2="80" stroke="rgba(0,0,0,0.3)" stroke-width="1" stroke-dasharray="4,8"></line>
+							<line x1="0" y1="160" x2="800" y2="160" stroke="rgba(0,0,0,0.3)" stroke-width="1" stroke-dasharray="4,8"></line>
+							<line x1="200" y1="0" x2="200" y2="260" stroke="rgba(0,0,0,0.2)" stroke-width="1"></line>
+							<line x1="500" y1="0" x2="500" y2="260" stroke="rgba(0,0,0,0.2)" stroke-width="1"></line>
+							<polygon points="400,30 440,80 400,130 360,80" fill="rgba(0,0,0,0.25)" stroke="rgba(0,0,0,0.4)" stroke-width="2"></polygon>
+							<text x="400" y="86" font-family="'Bebas Neue'" font-size="28" text-anchor="middle" fill="rgba(0,0,0,0.5)" letter-spacing="2">DESAI</text>
+						</svg>
+					</div>
+				</div>
+				<div class="featured-body">
+					<div class="post-tags">
+						if d.Featured.Featured {
+							<span class="ptag ptag-pink">FEATURED</span>
+						}
+						for i, tag := range d.Featured.Tags {
+							<span class={ "ptag " + tagClass(i) }>{ strings.ToUpper(tag) }</span>
+						}
+						<span class="post-date">{ fmt.Sprintf("%d.%02d.%d", d.Featured.Date.Day(), d.Featured.Date.Month(), d.Featured.Date.Year()) }</span>
+					</div>
+					<h2 class="featured-title">{ d.Featured.Title }</h2>
+					if d.Featured.Summary != "" {
+						<p class="post-excerpt">{ d.Featured.Summary }</p>
+					}
+					<div class="post-footer">
+						<span class="read-link">ЧИТАТЬ ПОСТ →</span>
+					</div>
+				</div>
+			</a>
+		</article>
+	}
+	if len(d.Grid) > 0 {
+		<!-- GRID -->
+		<div class="sec-label">
+			<span class="sec-num">02</span>
+			<span class="sec-title">ПОСЛЕДНЕЕ</span>
+			<div class="sec-line"></div>
+		</div>
+		<div class="posts-grid">
+			for i, p := range d.Grid {
+				<article
+					class="post-card"
+					data-tags={ strings.Join(p.Tags, ",") }
+				>
+					<a
+						class="card-link"
+						href={ templ.SafeURL("/posts/" + p.Slug) }
+						hx-get={ "/posts/" + p.Slug }
+						hx-target="#content"
+						hx-push-url={ "/posts/" + p.Slug }
+					>
+						<div class={ "card-stripe " + stripeClass(i) }></div>
+						<div class="card-body">
+							<div class="post-tags">
+								for j, tag := range p.Tags {
+									<span class={ "ptag " + tagClass(j) }>{ strings.ToUpper(tag) }</span>
+								}
+								<span class="post-date">{ fmt.Sprintf("%02d-%02d", p.Date.Day(), p.Date.Month()) }</span>
+							</div>
+							<h3 class="card-title">{ p.Title }</h3>
+							if p.Summary != "" {
+								<p class="card-excerpt">{ p.Summary }</p>
+							}
+							<div class="post-footer">
+								<span class="read-link">→</span>
+							</div>
+						</div>
+					</a>
+				</article>
+			}
+		</div>
+	}
+	if len(d.List) > 0 {
+		<!-- ARCHIVE LIST -->
+		<div class="sec-label">
+			<span class="sec-num">03</span>
+			<span class="sec-title">АРХИВ</span>
+			<div class="sec-line"></div>
+		</div>
+		<div class="post-list">
+			for i, p := range d.List {
+				<a
+					class="list-item"
+					href={ templ.SafeURL("/posts/" + p.Slug) }
+					hx-get={ "/posts/" + p.Slug }
+					hx-target="#content"
+					hx-push-url={ "/posts/" + p.Slug }
+					data-tags={ strings.Join(p.Tags, ",") }
+				>
+					<div class="list-num">{ fmt.Sprintf("%02d", i+4) }</div>
+					<div>
+						<div class="list-title">{ p.Title }</div>
+						<div class="list-meta">
+							if len(p.Tags) > 0 {
+								<span class="lcat">{ strings.ToUpper(p.Tags[0]) + " //" }</span>
+							}
+							{ fmt.Sprintf(" %d-%02d-%02d", p.Date.Year(), p.Date.Month(), p.Date.Day()) }
+						</div>
+					</div>
+					<div class="list-arrow">›</div>
+				</a>
+			}
+		</div>
+	}
+	if d.Featured == nil && len(d.Grid) == 0 && len(d.List) == 0 {
+		<div class="empty-state">
+			<p>Постов пока нет. <a href="/admin/new" hx-get="/admin/new" hx-target="#content" hx-push-url="true">Написать первый →</a></p>
+		</div>
+	}
+}

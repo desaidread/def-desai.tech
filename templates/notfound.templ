@@ -1,0 +1,33 @@
+package templates
+
+templ NotFound() {
+	<div class="notfound-wrap">
+		<div class="notfound-inner">
+			<div class="notfound-code">404</div>
+			<div class="notfound-glitch" aria-hidden="true">404</div>
+			<div class="hero-eyebrow" style="justify-content:center;">PAGE NOT FOUND</div>
+			<h1 class="notfound-title">
+				<span class="stroke">ЭТА</span> <span class="filled">СТРАНИЦА</span>
+				<span class="small-line" style="font-size:clamp(14px,2vw,22px);">{ "// НЕ СУЩЕСТВУЕТ" }</span>
+			</h1>
+			<p class="notfound-desc">
+				Страница удалена, переименована или никогда не существовала.
+			</p>
+			<div class="hero-links" style="justify-content:center;">
+				<a
+					href="/"
+					class="btn-primary"
+					hx-get="/"
+					hx-target="#content"
+					hx-push-url="true"
+				>← НА ГЛАВНУЮ</a>
+			</div>
+		</div>
+	</div>
+}
+
+templ NotFoundPage() {
+	@Layout("404 — DESAI") {
+		@NotFound()
+	}
+}

@@ -1,0 +1,106 @@
+package templates
+
+templ About() {
+	<section class="about-page">
+		<!-- Hero -->
+		<div class="about-page-hero dot-bg">
+			<div class="about-page-hero-inner">
+				<div class="hero-eyebrow">IDENTITY FILE</div>
+				<h1 class="hero-name" data-text="DESAI">
+					<span class="stroke">DE</span><span class="filled">SAI</span>
+					<span class="small-line">{ "// WHO AM I" }</span>
+				</h1>
+			</div>
+		</div>
+		<!-- About strip -->
+		<section class="about-strip">
+			<div class="about-inner">
+				<div>
+					<div class="about-label">Identity</div>
+					<div class="about-heading">КТО<br/>Я ТАКОЙ</div>
+					<p class="about-text">
+						Чувак который что-то делает. Пишу бэкенд на Go,
+						иногда ломаю фронтенд, читаю маньяков от программирования
+						и делюсь мыслями здесь.<br/><br/>
+						Этот блог — мой цифровой след. Без рекламы, без трекинга.
+						Только то что я реально думаю и делаю.
+					</p>
+				</div>
+				<div>
+					<div class="about-label">Stack</div>
+					<div class="about-heading">ЧЕМ<br/>ЗАНЯТ</div>
+					<ul class="skill-list">
+						<li class="skill-item">
+							<div class="skill-name"><span>GO / BACKEND</span><span class="skill-pct">30%</span></div>
+							<div class="skill-bar-bg"><div class="skill-bar" style="width:90%"></div></div>
+						</li>
+						<li class="skill-item">
+							<div class="skill-name"><span>SYSTEMS / LINUX</span><span class="skill-pct">30%</span></div>
+							<div class="skill-bar-bg"><div class="skill-bar green" style="width:80%"></div></div>
+						</li>
+						<li class="skill-item">
+							<div class="skill-name"><span>WEB / FRONTEND</span><span class="skill-pct">5%</span></div>
+							<div class="skill-bar-bg"><div class="skill-bar" style="width:65%"></div></div>
+						</li>
+						<li class="skill-item">
+							<div class="skill-name"><span>HTMX / TEMPL</span><span class="skill-pct">20%</span></div>
+							<div class="skill-bar-bg"><div class="skill-bar" style="width:75%"></div></div>
+						</li>
+					</ul>
+				</div>
+				<div>
+					<div class="about-label">Links</div>
+					<div class="about-heading">СВЯЗЬ</div>
+					<div class="contact-items">
+						<a href="https://github.com/desaidread" class="contact-item">
+							<div class="contact-icon">GH</div>
+							<div>
+								<span class="contact-label">GITHUB</span>
+								<span class="contact-sub">{ "@DESAI // REPOS" }</span>
+							</div>
+						</a>
+						<a href="https://t.me/def_desai" class="contact-item">
+							<div class="contact-icon">TG</div>
+							<div>
+								<span class="contact-label">TELEGRAM</span>
+								<span class="contact-sub">{ "@DESAI // DM OPEN" }</span>
+							</div>
+						</a>
+						<a href="mailto:fodbog@gmail.com" class="contact-item">
+							<div class="contact-icon">{ "@" }</div>
+							<div>
+								<span class="contact-label">EMAIL</span>
+								<span class="contact-sub">FODBOG@GMAIL.COM</span>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Stack detail -->
+		<div class="about-detail-wrap">
+			<div class="about-detail">
+				<div class="sec-label">
+					<span class="sec-num">01</span>
+					<span class="sec-title">ЭТОТ САЙТ</span>
+					<div class="sec-line"></div>
+				</div>
+				<p class="about-detail-text">
+					Написан на <strong>Go</strong> + <strong>HTMX</strong> + <strong>Templ</strong>.
+					Посты — Markdown-файлы в папке <code>data/posts/</code>.
+					Деплой — один бинарник. Никакого JavaScript-фреймворка.
+					Никакой базы данных. Просто файлы и Go.
+				</p>
+				<div style="margin-top:1.5rem;">
+					<a
+						href="/"
+						class="btn-primary"
+						hx-get="/"
+						hx-target="#content"
+						hx-push-url="true"
+					>ЧИТАТЬ БЛОГ</a>
+				</div>
+			</div>
+		</div>
+	</section>
+}

@@ -1,0 +1,49 @@
+package templates
+
+import (
+	"fmt"
+	"site/models"
+	"strings"
+)
+
+templ PostPage(p models.Post) {
+	<div class="post-page-wrap">
+		<div class="post-page-inner">
+			<a
+				href="/"
+				class="post-back"
+				hx-get="/"
+				hx-target="#content"
+				hx-push-url="true"
+			>← ВЕРНУТЬСЯ</a>
+			<div class="post-page-header">
+				<div class="post-tags" style="margin-bottom:1rem;">
+					if p.Featured {
+						<span class="ptag ptag-pink">FEATURED</span>
+					}
+					for i, tag := range p.Tags {
+						<span class={ "ptag " + tagClass(i) }>{ strings.ToUpper(tag) }</span>
+					}
+					<span class="post-date">{ fmt.Sprintf("%d.%02d.%d", p.Date.Day(), p.Date.Month(), p.Date.Year()) }</span>
+				</div>
+				<h1 class="post-page-title">{ p.Title }</h1>
+				if p.Summary != "" {
+					<p class="post-page-summary">{ p.Summary }</p>
+				}
+				<div class="post-page-divider"></div>
+			</div>
+			<div class="post-page-body">
+				@templ.Raw(renderMarkdown(p.Content))
+			</div>
+			<div class="post-page-footer">
+				<a
+					href="/"
+					class="btn-outline"
+					hx-get="/"
+					hx-target="#content"
+					hx-push-url="true"
+				>← ВСЕ ПОСТЫ</a>
+			</div>
+		</div>
+	</div>
+}

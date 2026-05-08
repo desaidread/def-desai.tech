@@ -1,0 +1,109 @@
+package templates
+
+import (
+	"fmt"
+	"site/models"
+	"strings"
+)
+
+templ AdminIndex(posts []models.Post) {
+	<div class="admin-wrap">
+		<div class="admin-page-header">
+			<div>
+				<div class="admin-eyebrow">CONTROL PANEL</div>
+				<h1 class="admin-title">ADMIN<span>{ "//" }</span>POSTS</h1>
+			</div>
+			<div style="display:flex;gap:8px;align-items:center;">
+				<a
+					href="/admin/new"
+					class="btn-primary"
+					hx-get="/admin/new"
+					hx-target="#content"
+					hx-push-url="true"
+				>+ NEW POST</a>
+				<a href="/admin/logout" class="admin-btn admin-btn-ghost" style="padding:10px 16px;">LOGOUT</a>
+			</div>
+		</div>
+		<div class="admin-stats">
+			<div class="admin-stat">
+				<span class="admin-stat-num">{ fmt.Sprintf("%d", len(posts)) }</span>
+				<span class="admin-stat-label">TOTAL POSTS</span>
+			</div>
+			<div class="admin-stat">
+				<span class="admin-stat-num">{ fmt.Sprintf("%d", countFeatured(posts)) }</span>
+				<span class="admin-stat-label">FEATURED</span>
+			</div>
+			<div class="admin-stat">
+				<span class="admin-stat-num">{ fmt.Sprintf("%d", len(models.CollectTags(posts))) }</span>
+				<span class="admin-stat-label">TAGS</span>
+			</div>
+		</div>
+		<div class="admin-sec-label">
+			<span class="sec-num">ALL</span>
+			<span class="sec-title">ПОСТЫ</span>
+			<div class="sec-line"></div>
+		</div>
+		<div class="admin-post-list" id="admin-post-list">
+			for _, p := range posts {
+				@AdminPostRow(p)
+			}
+		</div>
+	</div>
+}
+
+templ AdminPostRow(p models.Post) {
+	<div class="admin-row" id={ "row-" + p.Slug }>
+		<div class="admin-row-stripe" style={ func() string {
+			if p.Featured { return "background:var(--pink)" }
+			return "background:var(--green)"
+		}() }></div>
+		<div class="admin-row-body">
+			<div class="admin-row-meta">
+				<span class="admin-row-date">{ fmt.Sprintf("%d.%02d.%d", p.Date.Day(), p.Date.Month(), p.Date.Year()) }</span>
+				if p.Featured {
+					<span class="ptag ptag-pink" style="font-size:8px;">FEATURED</span>
+				}
+				for _, tag := range p.Tags {
+					<span class="ptag ptag-white" style="font-size:8px;">{ strings.ToUpper(tag) }</span>
+				}
+			</div>
+			<div class="admin-row-title">{ p.Title }</div>
+			if p.Summary != "" {
+				<div class="admin-row-summary">{ p.Summary }</div>
+			}
+		</div>
+		<div class="admin-row-actions">
+			<a
+				href={ templ.SafeURL("/posts/" + p.Slug) }
+				class="admin-btn admin-btn-ghost"
+				hx-get={ "/posts/" + p.Slug }
+				hx-target="#content"
+				hx-push-url={ "/posts/" + p.Slug }
+			>VIEW</a>
+			<a
+				href={ templ.SafeURL("/admin/edit/" + p.Slug) }
+				class="admin-btn admin-btn-green"
+				hx-get={ "/admin/edit/" + p.Slug }
+				hx-target="#content"
+				hx-push-url={ "/admin/edit/" + p.Slug }
+			>EDIT</a>
+			<button
+				class="admin-btn admin-btn-danger"
+				hx-post={ "/admin/delete/" + p.Slug }
+				hx-target={ "#row-" + p.Slug }
+				hx-swap="outerHTML"
+				hx-confirm={ "Удалить «" + p.Title + "»?" }
+			>DEL</button>
+		</div>
+	</div>
+}
+
+func countFeatured(posts []models.Post) int {
+	n := 0
+	for _, p := range posts {
+		if p.Featured {
+			n++
+		}
+	}
+	return n
+}

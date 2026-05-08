@@ -1,0 +1,3 @@
+data/posts/** linguist-documentation
+static/** linguist-vendored
+templates/*.html linguist-generated
