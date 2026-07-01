@@ -1,3 +1,2 @@
-data/posts/** linguist-documentation
-static/** linguist-vendored
-templates/*.html linguist-generated
+*.html linguist-detectable=false
+*.templ linguist-detectable=false
